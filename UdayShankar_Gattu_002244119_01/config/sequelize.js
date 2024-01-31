@@ -4,7 +4,6 @@ const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbPool.DB, dbPool.USER, dbPool.PASSWORD, {
   host: dbPool.HOST,
   dialect: dbPool.dialect,
-  //operatorsAliases: false,
   logging: false,
 
   pool: {
