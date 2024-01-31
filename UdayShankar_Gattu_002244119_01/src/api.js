@@ -10,25 +10,25 @@ app.use(bodyParser.json());
 
 
 //Handling Cache-Control Headers
-app.use((req, res, next) => {
-  res.setHeader('Cache-Control', 'no-cache, no-store');
+app.use((request, response, next) => {
+  response.setHeader('Cache-Control', 'no-cache, no-store');
   next();
 });
 
-app.get('/healthz', async (req, res) => {
+app.get('/healthz', async (request, response) => {
   let client;
 
   try {
 
-    if (req.body && Object.keys(req.body).length > 0 || req.query && Object.keys(req.query).length > 0) {
-      res.status(400).send();
+    if (request.body && Object.keys(request.body).length > 0 || request.query && Object.keys(request.query).length > 0) {
+      response.status(400).send();
     } else {
       await dbPool.sequelize.authenticate();
-      res.status(200).send();
+      response.status(200).send();
     }
   } catch (error) {
     //database not available 
-    res.status(503).send();
+    response.status(503).send();
   } finally {
     if (client) {
       client.release();
@@ -36,14 +36,14 @@ app.get('/healthz', async (req, res) => {
   }
 });
 
-app.all('/*', (req, res) => {
-  if (req.method == 'GET') {
+app.all('/*', (request, response) => {
+  if (request.method == 'GET') {
     //If the url or endpoint entered is wrong
-    res.status(404).send();
+    response.status(404).send();
   }
   else {
     //If any other methods are used except GET
-    res.status(405).send();
+    response.status(405).send();
   }
 });
 
